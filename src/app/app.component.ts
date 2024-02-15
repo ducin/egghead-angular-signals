@@ -1,30 +1,48 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, model, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, FormsModule],
   template: `
-    <h1>Hello, {{ title }}</h1>
+    <h1>Angular signals</h1>
+    <input
+      type="text"
+      [value]="nameFilter()"
+      (input)="updateNameFilter($event)"
+    />
+    <input type="text" [(ngModel)]="nameFilter" />
     <ul>
-    @for (item of lastItem(); track 'id') {
-      <li>{{item.name}}</li>
-    }
+      @for (item of visibleItems(); track 'id') {
+      <li>{{ item.name }}</li>
+      }
     </ul>
   `,
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'signals';
-
   items = signal([
-    {id: 1, name: 'Andy'},
-    {id: 2, name: 'Bob'},
-    {id: 3, name: 'Charlie'},
-  ])
+    { id: 1, name: 'Andy' },
+    { id: 2, name: 'Bob' },
+    { id: 3, name: 'Charlie' },
+  ]);
 
-  lastItem = computed(() => 
-  this.items().slice(-1))
+  nameFilter = signal('');
+
+  updateNameFilter($event: Event) {
+    this.nameFilter.set(($event.target as HTMLInputElement)['value']);
+  }
+
+  lastItem = computed(() => this.items().slice(-1));
+
+  visibleItems = computed(() => {
+    // return this.items().filter(item => item.name.includes(this.nameFilter()))
+    const nameFilter = this.nameFilter().toLowerCase();
+    return this.items().filter((item) => {
+      return item.name.toLowerCase().includes(nameFilter);
+    });
+  });
 }
