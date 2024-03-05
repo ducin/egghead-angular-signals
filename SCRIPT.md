@@ -1,4 +1,4 @@
-# (how do I) access an Angular Signal's value and display it within the component template
+# 2. Access an Angular Signal's value and display it within the component template
 
 - Call the signal as a function. Because a signal IS a function.
 
@@ -36,13 +36,13 @@ In order to display the items, use the new @for loop inside the template:
 
 ```html
 <ul>
-  @for (item of visibleItems(); track 'id') {
+  @for (item of filteredItems(); track 'id') {
   <li>{{ item.name }}</li>
   }
 </ul>
 ```
 
-# (how do I) access an Angular Signal's value inside event handler methods
+# 3. Access an Angular Signal's value inside event handler methods
 
 - Create a method on the component class
 
@@ -63,7 +63,7 @@ Whenever we click the button, we see the signal value being logged.
 
 The difference between calling the signal function within the template (SHOW TEMPLATE) and the typescript class code (SHOW METHOD) is that the code in the template is REACTIVE. Whenever the signal value changes, the component view will be updated. However, the call within the method is IMPERATIVE - current value is pulled only when the event happens.
 
-# (how do I) create an Angular Computed signal which depends on another signal
+# 4. Create an Angular Computed signal which depends on another signal
 
 - create a property which gets assigned a computed signal.
 
@@ -76,7 +76,7 @@ The computed function requires us to pass a FACTORY callback which creates the e
 Quite often, computed signals depend on multiple signals. Computed visible items will hold only the items which match a string filter.
 
 ```ts
-visibleItems = computed(() => {});
+filteredItems = computed(() => {});
 ```
 
 Let's add a new signal which will hold the name filter:
@@ -102,7 +102,7 @@ let's also create the `updateNameFilter` method to process the event:
 Only the items that match the filter will get displayed.
 
 ```ts
-visibleItems = computed(() => {
+filteredItems = computed(() => {
   // case-sensitive:
   // return this.items().filter(item => item.name.includes(this.nameFilter()))
 
@@ -114,11 +114,45 @@ visibleItems = computed(() => {
 });
 ```
 
-# (how do I) create an Angular Computed signal on top of another computed
+# 5. Create an Angular Computed signal on top of another computed
 
-a computed can be created on top of another computed
+Create a new property and assign a computed which simply reads any existing computed signals:
 
-# (how do I) update an Angular Signal's value and make computed signal emit updates
+```ts
+visibleItems = computed(() => this.filteredItems());
+```
+
+Let's create a new signal which will define the sorting order
+
+```ts
+ascOrder = signal(true);
+
+visibleItems = computed(() => {
+  const order = this.ascOrder() ? 1 : -1;
+  return this.filteredItems().sort((a, b) => {
+    return a.name.localeCompare(b.name) * order;
+  });
+});
+```
+
+A computed can be created on top of other computed signals AS LONG AS there are no cyclic dependencies. But even if you do that, angular will catch it for you:
+
+```ts
+a = signal(1);
+b = computed(() => this.a() + this.c());
+c = computed(() => this.a() - this.b());
+```
+
+Above signals have no "live consumers". It means that nothing directly requires to grab the value of the signals: neither templates nor effects.
+
+```html
+{{ b() }}
+```
+
+but once there is a live consumer, the computed signals have to re-evaluate their current values and at this point Angular will find cycles and throw an appropriate error.
+(SHOW ERROR)
+
+# 6. Update an Angular Signal's value and make computed signal emit updates
 
 - you can update the signal value in two ways:
   (INTELLISENSE)
@@ -146,7 +180,7 @@ append(){
 
 - Both `set` and `update` method exist on thw `WritableSignal` type. A computed, on the other hand, is NOT writable - it's type is just a `Signal` (implicitly, readonly).
 
-# (how do I) make an Angular Signal Readonly
+# 7. Make an Angular Signal Readonly
 
 - Create a new property. Call the `.asReadonly()` signal method and assign it to the property.
 
