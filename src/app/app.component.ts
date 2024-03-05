@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 
@@ -8,4 +8,6 @@ import { RouterOutlet } from '@angular/router';
   imports: [CommonModule, RouterOutlet],
   template: ` <h1>Angular signals</h1> `,
 })
-export class AppComponent {}
+export class AppComponent {
+  item = signal<string | undefined>(undefined);
+}
