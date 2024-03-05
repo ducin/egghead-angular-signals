@@ -4,7 +4,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "prettier.printWidth": 60,
-  "editor.fontSize": 22,
+  "editor.fontSize": 12,
   "terminal.integrated.fontSize": 22,
   "editor.minimap.enabled": false
 }

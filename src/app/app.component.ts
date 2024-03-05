@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
       <li>{{ item.name }}</li>
       }
     </ul>
+    {{nameFilter().toLowerCase()}}
   `,
   styleUrl: './app.component.css',
 })
@@ -30,7 +31,8 @@ export class AppComponent {
     { id: 3, name: 'Charlie' },
   ]);
 
-  nameFilter = signal('');
+  // nameFilter = signal('')
+  nameFilter = signal<string | undefined>(undefined)
 
   updateNameFilter($event: Event) {
     this.nameFilter.set(($event.target as HTMLInputElement)['value']);
