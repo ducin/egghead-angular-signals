@@ -1,12 +1,10 @@
 # 2. Access an Angular Signal's value and display it within the component template
 
-- Call the signal as a function. Because a signal IS a function.
+- Call the signal as a function. Technically, an Angular Signal IS a function which returns current signal value
 
 ```html
 <span>{{ signal() }}</span>
 ```
-
-Each signal holds its current value, which means, it always has to have a value. Whenever the signal function is called, that current value is returned.
 
 - Whenever signal value changes, the component's template is guaranteed to get updated.
 
@@ -42,7 +40,26 @@ In order to display the items, use the new @for loop inside the template:
 </ul>
 ```
 
-# 3. Access an Angular Signal's value inside event handler methods
+# 3. Narrow down signal value type within if statement
+
+Sometimes it can be impossible to use a convenient syntax such as the optional chaining operator in order to narrow down the type within a single expression - you might need an angular template IF statement
+
+in this case typescript will NOT narrow down the signal value type. That's because the function gets called twice and Typescript CANNOT guarantee the value will be the same both times.
+
+What you can do is wrap the signal within a getter, so that TS treats it as a property
+
+```ts
+  #item = signal<string | undefined>('hey');
+
+  get item(){
+    return this.#item()
+  }
+```
+
+our signal is hidden behind a private ITEM property and the we expose the public GETTER only.
+Now the if type narrowing works as expected.
+
+# 4. Access an Angular Signal's value inside event handler methods
 
 - Create a method on the component class
 
@@ -63,7 +80,7 @@ Whenever we click the button, we see the signal value being logged.
 
 The difference between calling the signal function within the template (SHOW TEMPLATE) and the typescript class code (SHOW METHOD) is that the code in the template is REACTIVE. Whenever the signal value changes, the component view will be updated. However, the call within the method is IMPERATIVE - current value is pulled only when the event happens.
 
-# 4. Create an Angular Computed signal which depends on another signal
+# 5. Create an Angular Computed signal which depends on another signal
 
 - create a property which gets assigned a computed signal.
 
@@ -114,7 +131,7 @@ filteredItems = computed(() => {
 });
 ```
 
-# 5. Create an Angular Computed signal on top of another computed
+# 6. Create an Angular Computed signal on top of another computed
 
 Create a new property and assign a computed which simply reads any existing computed signals:
 
@@ -152,7 +169,7 @@ Above signals have no "live consumers". It means that nothing directly requires 
 but once there is a live consumer, the computed signals have to re-evaluate their current values and at this point Angular will find cycles and throw an appropriate error.
 (SHOW ERROR)
 
-# 6. Update an Angular Signal's value and make computed signal emit updates
+# 7. Update an Angular Signal's value and make computed signal emit updates
 
 - you can update the signal value in two ways:
   (INTELLISENSE)
@@ -180,7 +197,7 @@ append(){
 
 - Both `set` and `update` method exist on thw `WritableSignal` type. A computed, on the other hand, is NOT writable - it's type is just a `Signal` (implicitly, readonly).
 
-# 7. Make an Angular Signal Readonly
+# 8. Make an Angular Signal Readonly
 
 - Create a new property. Call the `.asReadonly()` signal method and assign it to the property.
 

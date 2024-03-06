@@ -1,5 +1,6 @@
 - [x] (how do I) create an Angular Signal which stores a value
-- [ ] (how do I) access an Angular Signal's value and display it within the component template
+- [x] (how do I) access an Angular Signal's value and display it within the component template
+- [x] (how do I) narrow down signal value type within if statement
 - [ ] (how do I) access an Angular Signal's value inside event handler methods
 - [ ] (how do I) create an Angular Computed signal which depends on another signal
 - [ ] (how do I) create an Angular Computed signal on top of another computed
