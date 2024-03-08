@@ -169,7 +169,7 @@ Above signals have no "live consumers". It means that nothing directly requires 
 but once there is a live consumer, the computed signals have to re-evaluate their current values and at this point Angular will find cycles and throw an appropriate error.
 (SHOW ERROR)
 
-# 7. Update an Angular Signal's value and make computed signal emit updates
+# 7. Update an Angular Signal's value and make Computed Signal emit updates
 
 - you can update the signal value in two ways:
   (INTELLISENSE)
