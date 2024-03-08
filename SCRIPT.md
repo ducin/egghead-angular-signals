@@ -253,7 +253,17 @@ And the only way to read the signal value is through the readonly signal:
 
 - Though a readonly signal and a computed are two different things, they behave the same way.
 
-# /AFTER EFFECT/ (how do I) read an Angular Signal value without it being tracked
+# 9. Share Angular Signal state using Services
+
+# 10. Make an Angular Signal compare object values instead of references
+
+# 11. Use Angular Signals within an Angular OnPush-based Component
+
+# 12. Create an Angular Signal Effect
+
+# 13. Synchronize Angular Signal or Computed value to localStorage
+
+# 14. Read an Angular Signal value while being untracked
 
 - Use the `untracked()` function to access any angular signal without it being tracked later on:
 
@@ -272,3 +282,21 @@ In this example, the `untrackedSignal` will re-evaluate only when the `existing`
   template
   whenever a signal changes, each of them refresh in their own way.
   On the other hand, an event handler method is NOT a reactive context. The signal value is just read whenever the event is emitted. There's no reactivity involved.
+
+# 15. Manually destroy an Angular Signal Effect
+
+# 16. Bind an Angular Signal Effect to an Injector for automatic cleanup
+
+# 17. Set up an Angular Signal Effect cleanup handler
+
+# 18. Turn an RxJS observable into an Angular Signal with toSignal
+
+# 19. Provide an initial value within toSignal
+
+with requiredSync
+
+# 20. Handle observable errors within toSignal
+
+emit `error`, rejectErrors
+
+# 21. Turn an Angular Signal into an RxJS observable

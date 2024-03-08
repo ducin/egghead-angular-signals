@@ -6,25 +6,46 @@
 6. [ ] create an Angular Computed signal on top of another computed
 7. [ ] update an Angular Signal's value and make Computed Signal re-evaluate and emit notification
 8. [ ] make an Angular Signal Readonly
-9. [ ] make an Angular Signal compare object values instead of references
+9. [ ] share Angular Signal state using Services
 10. [ ] use Angular Signals within an Angular OnPush-based Component
-11. [ ] create an Angular Signal Effect
-12. [ ] synchronize Angular Signal or Computed value to localStorage
-13. [ ] read an Angular Signal value while being untracked
-14. [ ] manually destroy an Angular Signal Effect
-15. [ ] bind an Angular Signal Effect to an Injector for automatic cleanup
-16. [ ] set up an Angular Signal Effect cleanup handler
-17. [ ] turn an RxJS observable into an Angular Signal with toSignal
-18. [ ] provide an initial value within toSignal
-19. [ ] handle observable errors within toSignal
-20. [ ] turn an Angular Signal into an RxJS observable
+11. [ ] make an Angular Signal compare object values instead of references
+12. [ ] create an Angular Signal Effect
+13. [ ] synchronize Angular Signal or Computed value to localStorage
+14. [ ] read an Angular Signal value while being untracked
+15. [ ] manually destroy an Angular Signal Effect
+16. [ ] bind an Angular Signal Effect to an Injector for automatic cleanup
+17. [ ] set up an Angular Signal Effect cleanup handler
+18. [ ] turn an RxJS observable into an Angular Signal with toSignal
+19. [ ] provide an initial value within toSignal
+20. [ ] handle observable errors within toSignal
+21. [ ] turn an Angular Signal into an RxJS observable
+
+listenOnce - effect utility: https://twitter.com/Enea_Jahollari/status/1757444009826353276
 
 # Angular Signal Components
 
-1. [ ] create an Angular Component Signal Input to receive data passed from the parent component
-2. [ ] create an Angular Component Output to emit events
-3. [ ] map Angular Component Output to and from RxJS Observables
-4. [ ] share state across Angular Components using Angular Model Inputs
+1. [ ] create an Angular Component Signal `input` function to receive data passed from the parent component
+2. [ ] create an Angular Component `output` function to emit events
+3. [ ] map Angular Component `output` to and from RxJS Observables
+4. [ ] share state across Angular Components using Angular Signal Models
+
+input types:
+https://www.typescriptlang.org/play?#code/JYWwDg9gTgLgBAbzsAdmArjANHF6QBGAplAIIwxTAGZFwC+cAZlBCHAOQACAhigOboANjygB6AMbQiHANwAoeWLFwAMkXiomJIigl0AJhGQwAznABWEAnACEtuIokjT5gGIRjCRXF-NPcAC8yGiYABQAzACUCn5wygB6APw+fkyeAExBIRgwkThIlHym6VAgAFxwYQBuPELoRJV4hCRRQQB8VcCmAHI8PTV1DW1JcOgoBkRMqEQGcJW19URt9DHycYkp62meEdmouQB0UEQAjujAJwZhhVDFpRVViw1N+MRQbYGdYd19A8-LOCjcaTaYoWbzOAAlZrDZiZKpXzpCAAFn2oRgxzOFyuNyKKBK0EezXe5Eo1Foq22vk2iPiKgA6gALHRwIgADzAQmAEmAmnM4P0rlEAE9HNT-BAAKzo3IAHhJJDgAB9cMIhO0wnghEIohLaRLkQA2WWYLHnS6zBVvEia2F+A30IA
+
+signal queries demo: https://stackblitz.com/edit/angular-signal-queries?file=src%2Fmain.ts
+signal model demo: https://stackblitz.com/edit/angular-model-inputs?file=src%2Fmain.ts
+model inputs: https://github.com/angular/angular/pull/54252
+output function demo: https://stackblitz.com/edit/angular-output-fn?file=src%2Fmain.ts
+
+With the model input you will pass a signal directly instead of a value with the signal input.
+
+The will allow the parent component to subscribe to the child model and update the local signal.
+
+it provides a two-way binding 😅
+
+The 2-way bindable signal inputs called the model inputs will allow inputs to be writable.
+
+It maybe lead to dirty usecases, but fundamentally there is nothing wrong to update that input.
 
 # Angular Deferrable Views
 
