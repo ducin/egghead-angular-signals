@@ -1,4 +1,4 @@
-import { Component, computed, model, signal } from '@angular/core';
+import { Component, Signal, computed, model, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -20,7 +20,8 @@ import { FormsModule } from '@angular/forms';
       <li>{{ item.name }}</li>
       }
     </ul>
-    {{nameFilter().toLowerCase()}}
+    {{ nameFilter().toLowerCase() }}
+    <!-- {{ b() }} cycle here -->
   `,
   styleUrl: './app.component.css',
 })
@@ -31,8 +32,8 @@ export class AppComponent {
     { id: 3, name: 'Charlie' },
   ]);
 
-  // nameFilter = signal('')
-  nameFilter = signal<string | undefined>(undefined)
+  // nameFilter = signal<string | undefined>(undefined)
+  nameFilter = signal('');
 
   updateNameFilter($event: Event) {
     this.nameFilter.set(($event.target as HTMLInputElement)['value']);
@@ -40,11 +41,24 @@ export class AppComponent {
 
   lastItem = computed(() => this.items().slice(-1));
 
-  visibleItems = computed(() => {
+  filteredItems = computed(() => {
     // return this.items().filter(item => item.name.includes(this.nameFilter()))
     const nameFilter = this.nameFilter().toLowerCase();
-    return this.items().filter((item) => {
-      return item.name.toLowerCase().includes(nameFilter);
+    return this.items().filter((item) =>
+      item.name.toLowerCase().includes(nameFilter)
+    );
+  });
+
+  ascOrder = signal(true);
+
+  visibleItems = computed(() => {
+    const order = this.ascOrder() ? 1 : -1;
+    return this.filteredItems().sort((a, b) => {
+      return a.name.localeCompare(b.name) * order;
     });
   });
+
+  a = signal('John');
+  b: Signal<string> = computed(() => this.a() + this.c());
+  c: Signal<string> = computed(() => this.a() + this.b());
 }
