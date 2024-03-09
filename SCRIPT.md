@@ -85,12 +85,26 @@ The difference between calling the signal function within the template (SHOW TEM
 - create a property which gets assigned a computed signal.
 
 ```ts
-lastItem = computed(() => this.items().slice(-1));
+lastItem = computed(() => this.items().slice(-1)[0]);
+```
+
+```html
+last: {{ lastItem().name }}
 ```
 
 The computed function requires us to pass a FACTORY callback which creates the expected value. `lastItem` holds the last element of the array.
 
-Quite often, computed signals depend on multiple signals. Computed visible items will hold only the items which match a string filter.
+The reactivity flow works like the following: the template depends directly on the computed `lastItem` Whenever the computed value changes, the template will get updated. But the computed `lastItem` itself depends on the `items` signal. And whenever `items` signal change, computed `lastItem` will get a notification.
+
+So we have a graph of dependencies: `items` affect the `lastItem`, and `lastItem` affects the template.
+
+Computeds are LAZY. If we didn't use the computed anywhere, it would NEVER get re-evaluated. Let's pretend this situation here (REMOVE {{lastItem().name}}) - there's nobody interested in getting the most recent computed value, so it doesn't re-evaluate whenever any of its dependencies change.
+
+But as we bring back the template part which consumes the computed `lastItem`, the computed has to re-evaluate, as there is something which needs it. The template is a - so called - "live consumer".
+
+Quite often, computed signals depend on multiple signals.
+Let's create one more computed signal.
+Computed `filteredItems` will hold only the items which match a string filter.
 
 ```ts
 filteredItems = computed(() => {});
@@ -100,20 +114,6 @@ Let's add a new signal which will hold the name filter:
 
 ```ts
 nameFilter = signal("");
-```
-
-We'll also make the filter editable via an input:
-
-```html
-<input type="text" [value]="nameFilter()" (input)="updateNameFilter($event)" />
-```
-
-let's also create the `updateNameFilter` method to process the event:
-
-```ts
-  updateNameFilter($event: Event) {
-    this.nameFilter.set(($event.target as HTMLInputElement)['value']);
-  }
 ```
 
 Only the items that match the filter will get displayed.
