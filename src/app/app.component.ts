@@ -1,45 +1,73 @@
-import { Component, Signal, computed, model, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, FormsModule],
-  template: `
-    <h1>Angular signals</h1>
+  imports: [CommonModule, RouterOutlet],
+  template: ` <h1>Angular signals</h1>
+    last: {{ lastItem()?.name }}
+
+    <button (click)="handleClick()">log items</button>
+    <button (click)="clearItems()">clear items</button>
+    <button (click)="append(newItemName())">new item</button>
+
+    <input
+      type="text"
+      [value]="newItemName()"
+      (input)="updateNewItemName($event)"
+    />
     <input
       type="text"
       [value]="nameFilter()"
       (input)="updateNameFilter($event)"
     />
-    <input type="text" [(ngModel)]="nameFilter" />
     <ul>
-      @for (item of visibleItems(); track 'id') {
+      @for(item of visibleItems(); track 'id'){
       <li>{{ item.name }}</li>
       }
-    </ul>
-    {{ nameFilter().toLowerCase() }}
-    <!-- {{ b() }} cycle here -->
-  `,
-  styleUrl: './app.component.css',
+    </ul>`,
 })
 export class AppComponent {
+  handleClick() {
+    console.log(this.items());
+  }
+
+  lastItem = computed(() => this.items().slice(-1)[0]);
+
   items = signal([
     { id: 1, name: 'Andy' },
     { id: 2, name: 'Bob' },
     { id: 3, name: 'Charlie' },
   ]);
 
-  // nameFilter = signal<string | undefined>(undefined)
+  readonlyItems = this.items.asReadonly();
+
+  clearItems() {
+    this.items.set([]);
+  }
+
+  mutateItems() {
+    var removed = this.items().splice(0);
+    var mutated = this.items();
+    console.log({ removed, mutated });
+  }
+
+  newItemName = signal('');
+  updateNewItemName($event: Event) {
+    this.newItemName.set(($event.target as HTMLInputElement)['value']);
+  }
+
+  append(name: string) {
+    this.items.update((prev) => [...prev, { id: prev.length + 1, name }]);
+  }
+
   nameFilter = signal('');
 
   updateNameFilter($event: Event) {
     this.nameFilter.set(($event.target as HTMLInputElement)['value']);
   }
-
-  lastItem = computed(() => this.items().slice(-1));
 
   filteredItems = computed(() => {
     // return this.items().filter(item => item.name.includes(this.nameFilter()))
@@ -57,8 +85,4 @@ export class AppComponent {
       return a.name.localeCompare(b.name) * order;
     });
   });
-
-  a = signal('John');
-  b: Signal<string> = computed(() => this.a() + this.c());
-  c: Signal<string> = computed(() => this.a() + this.b());
 }
