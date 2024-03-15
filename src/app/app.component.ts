@@ -1,52 +1,61 @@
-import { Component, Signal, computed, model, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { ItemsService } from './items.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, FormsModule],
-  template: `
-    <h1>Angular signals</h1>
+  imports: [CommonModule, RouterOutlet],
+  template: ` <h1>Angular signals</h1>
+    last: {{ lastItem()?.name }}
+
+    <button (click)="handleClick()">log items</button>
+    <button (click)="itemsSvc.clearItems()">clear items</button>
+    <button (click)="itemsSvc.append(newItemName())">new item</button>
+
+    <input
+      type="text"
+      [value]="newItemName()"
+      (input)="updateNewItemName($event)"
+    />
     <input
       type="text"
       [value]="nameFilter()"
       (input)="updateNameFilter($event)"
     />
-    <input type="text" [(ngModel)]="nameFilter" />
     <ul>
-      @for (item of visibleItems(); track 'id') {
+      @for(item of visibleItems(); track 'id'){
       <li>{{ item.name }}</li>
       }
-    </ul>
-    {{ nameFilter().toLowerCase() }}
-    <!-- {{ b() }} cycle here -->
-  `,
-  styleUrl: './app.component.css',
+    </ul>`,
 })
 export class AppComponent {
-  items = signal([
-    { id: 1, name: 'Andy' },
-    { id: 2, name: 'Bob' },
-    { id: 3, name: 'Charlie' },
-  ]);
+  itemsSvc = inject(ItemsService);
 
-  // nameFilter = signal<string | undefined>(undefined)
+  handleClick() {
+    console.log(this.itemsSvc.items());
+  }
+
+  lastItem = computed(() => this.itemsSvc.items().slice(-1)[0]);
+
+  newItemName = signal('');
+  updateNewItemName($event: Event) {
+    this.newItemName.set(($event.target as HTMLInputElement)['value']);
+  }
+
   nameFilter = signal('');
 
   updateNameFilter($event: Event) {
     this.nameFilter.set(($event.target as HTMLInputElement)['value']);
   }
 
-  lastItem = computed(() => this.items().slice(-1));
-
   filteredItems = computed(() => {
     // return this.items().filter(item => item.name.includes(this.nameFilter()))
     const nameFilter = this.nameFilter().toLowerCase();
-    return this.items().filter((item) =>
-      item.name.toLowerCase().includes(nameFilter)
-    );
+    return this.itemsSvc
+      .items()
+      .filter((item) => item.name.toLowerCase().includes(nameFilter));
   });
 
   ascOrder = signal(true);
@@ -57,8 +66,4 @@ export class AppComponent {
       return a.name.localeCompare(b.name) * order;
     });
   });
-
-  a = signal('John');
-  b: Signal<string> = computed(() => this.a() + this.c());
-  c: Signal<string> = computed(() => this.a() + this.b());
 }
