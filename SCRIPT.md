@@ -187,15 +187,31 @@ whenever the `clear` method gets called, the previous signal value is lost and a
 - in order to create a new signal value using the PREVIOUS value, use the `update` method and pass the callback:
 
 ```ts
-append(){
+append(name: string){
   this.items.update(previous => [...previous, {
     id: previous.length,
     name:
   }])
 }
+<input type="text" [value]="newItemName()" (input)="newItemName($event)" />
+
+  newItemName = signal('');
+  updateNewItemName($event: Event) {
+    this.nameFilter.set(($event.target as HTMLInputElement)['value']);
+  }
 ```
 
-- Both `set` and `update` method exist on thw `WritableSignal` type. A computed, on the other hand, is NOT writable - it's type is just a `Signal` (implicitly, readonly).
+Signal value updates have to be applied in an IMMUTABLE manner. In other words - if the value is an object, we should create a modified copy of the object. Because if we do mutate the signal's object value, angular might NOT emit updates to the signal's dependents. Let's see an example of such MISTAKE:
+
+```ts
+  clearItems() {
+    var removed = this.items().splice(0);
+    var mutated = this.items()
+    console.log({ removed, mutated });
+  }
+```
+
+The splice method mutates the array. As the `items` signal array's reference DIDN'T change, angular will NOT notify any of the computeds that depend on `items` signal. However, when anything asks the `items` signal for the value, the mutated value is returned. When we click the `log items` button (from the previous lesson), it logs an empty array.
 
 # 8. Make an Angular Signal Readonly
 
@@ -255,11 +271,11 @@ And the only way to read the signal value is through the readonly signal:
 
 # 9. Share Angular Signal state using Services
 
-# 10. Make an Angular Signal compare object values instead of references
+# 10. Use Angular Signals within an Angular OnPush-based Component
 
-# 11. Use Angular Signals within an Angular OnPush-based Component
+# 11. Create an Angular Signal Effect
 
-# 12. Create an Angular Signal Effect
+# 12. Make an Angular Signal compare object values instead of references
 
 # 13. Synchronize Angular Signal or Computed value to localStorage
 
