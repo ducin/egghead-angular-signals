@@ -253,9 +253,9 @@ And the only way to read the signal value is through the readonly signal:
 
 - Though a readonly signal and a computed are two different things, they behave the same way.
 
-# 9. Share Angular Signal state using Services
+# 9. Make an Angular Signal compare object values instead of references
 
-# 10. Make an Angular Signal compare object values instead of references
+# 10. Share Angular Signal state using Services
 
 # 11. Use Angular Signals within an Angular OnPush-based Component
 
