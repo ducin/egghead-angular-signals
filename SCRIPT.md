@@ -218,8 +218,19 @@ The splice method mutates the array. As the `items` signal array's reference DID
 - Create a new property. Call the `.asReadonly()` signal method and assign it to the property.
 
 ```ts
-value = this.signal.asReadonly();
+readonlyItems = this.signal.asReadonly();
 ```
+
+A readonly signal holds the very same value as it's original signal. And whenever the original signal value gets updated, readonly also gets updated.
+
+The whole point is that a Readonly signal has neither the `set` nor the `update` method, so there's essentially no way to modify its value. And it uses the `Signal` type. In contrast to WritableSignal (items) which have the 2 modifying methods.
+(-> logItems method code)
+
+A computed signal also doesn't have set and update methods, just as readonly signals. That's because it's value is a computation depending on another signal. Changing the computed value by hand would be illogical. And so Readonly signals and computed signals share the same type
+
+Readonly signals are not very useful within components, but they're super useful within services.
+
+# 9. Share Angular Signal state using Services
 
 - A popular usecase for readonly signals are services.
   (CLI)
@@ -268,8 +279,6 @@ And the only way to read the signal value is through the readonly signal:
 - Although a readonly signal represents the very same source signal, it doesn't have the `set` and `update` methods.
 
 - Though a readonly signal and a computed are two different things, they behave the same way.
-
-# 9. Share Angular Signal state using Services
 
 # 10. Use Angular Signals within an Angular OnPush-based Component
 
