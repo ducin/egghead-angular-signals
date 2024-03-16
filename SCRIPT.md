@@ -280,15 +280,15 @@ And the only way to read the signal value is through the readonly signal:
 
 - Though a readonly signal and a computed are two different things, they behave the same way.
 
-# 10. Use Angular Signals within an Angular OnPush-based Component
+# 10. Create an Angular Signal Effect
 
-# 11. Create an Angular Signal Effect
+```ts
+logEffect = effect(() => {
+  console.log(this.#items());
+});
+```
 
-# 12. Make an Angular Signal compare object values instead of references
-
-# 13. Synchronize Angular Signal or Computed value to localStorage
-
-# 14. Read an Angular Signal value while being untracked
+# 11. Read an Angular Signal value while being untracked
 
 - Use the `untracked()` function to access any angular signal without it being tracked later on:
 
@@ -308,20 +308,92 @@ In this example, the `untrackedSignal` will re-evaluate only when the `existing`
   whenever a signal changes, each of them refresh in their own way.
   On the other hand, an event handler method is NOT a reactive context. The signal value is just read whenever the event is emitted. There's no reactivity involved.
 
-# 15. Manually destroy an Angular Signal Effect
+# 12. Make an Angular Signal compare object values instead of references
 
-# 16. Bind an Angular Signal Effect to an Injector for automatic cleanup
+```ts
+#items = signal(
+  [
+    { id: 1, name: "Andy" },
+    { id: 2, name: "Bob" },
+    { id: 3, name: "Charlie" },
+  ],
+  { equal: (a, b) => Object.is(a, b) }
+);
+```
 
-# 17. Set up an Angular Signal Effect cleanup handler
+```ts
+import _ from "lodash";
 
-# 18. Turn an RxJS observable into an Angular Signal with toSignal
+#items = signal(
+  [
+    { id: 1, name: "Andy" },
+    { id: 2, name: "Bob" },
+    { id: 3, name: "Charlie" },
+  ],
+  { equal: _.isEqual }
+);
+```
 
-# 19. Provide an initial value within toSignal
+// Even though this is a different array instance, the deep equality
+// function will consider the values to be equal, and the signal won't
+// trigger any updates.
+data.set(['test']);
+
+```ts
+resetItems() {
+  this.#items.set([
+    { id: 1, name: 'Andy' },
+    { id: 2, name: 'Bob' },
+    { id: 3, name: 'Charlie' },
+  ]);
+}
+```
+
+# 13. Create a Reusable Effect Synchronizing Angular Signal or Computed value to localStorage
+
+```ts
+export function syncEffect<T>(key: string, valueGetter: () => T) {
+  return effect(() => {
+    return localStorage.setItem(key, JSON.stringify(valueGetter()));
+  });
+}
+```
+
+```ts
+synchronizeItemsEffect = syncEffect("items", () => this.#items());
+```
+
+# 14. Destroy an Angular Signal Effect
+
+by default - do nothing
+show when a component gets detroyed...
+(prepare a child component before)
+
+manually destroy the effect:
+
+```ts
+logEffect = effect(
+  () => {
+    console.log(this.#items());
+  },
+  { manualCleanup: true }
+);
+```
+
+# 15. Bind an Angular Signal Effect to an Injector for automatic cleanup
+
+# 16. Set up an Angular Signal Effect cleanup handler
+
+# 17. Turn an RxJS observable into an Angular Signal with toSignal
+
+# 18. Provide an initial value within toSignal
 
 with requiredSync
 
-# 20. Handle observable errors within toSignal
+# 19. Handle observable errors within toSignal
 
 emit `error`, rejectErrors
 
-# 21. Turn an Angular Signal into an RxJS observable
+# 20. Turn an Angular Signal into an RxJS observable
+
+# 21. Use Angular Signals within an Angular OnPush-based Component
