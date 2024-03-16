@@ -394,6 +394,20 @@ with requiredSync
 
 emit `error`, rejectErrors
 
-# 20. Turn an Angular Signal into an RxJS observable
+# 20. Fetch data via HTTP using RxJS observables and toSignal
 
-# 21. Use Angular Signals within an Angular OnPush-based Component
+# 21. Turn an Angular Signal into an RxJS observable
+
+```ts
+import { toObservable } from "@angular/core/rxjs-interop";
+```
+
+```ts
+items$ = toObservable(this.#items)
+
+constructor(){
+  this.items$.subscribe(console.log)
+}
+```
+
+# 22. Use Angular Signals within an Angular OnPush-based Component
