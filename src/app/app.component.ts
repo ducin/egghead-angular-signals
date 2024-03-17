@@ -7,12 +7,13 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ItemsService } from './items.service';
 import { ChildComponent } from './child.component';
 import { FormsModule } from '@angular/forms';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,10 @@ import { FormsModule } from '@angular/forms';
   styles: `
     label {
       display: block;
+    }
+
+    .bold {
+      font-weight: bold;
     }
   `,
   template: `
@@ -49,9 +54,15 @@ import { FormsModule } from '@angular/forms';
     </label>
     <ul>
       @for(item of visibleItems(); track 'id'){
-      <li>{{ item.name }}</li>
+      <li
+        (click)="chooseItem(item.id)"
+        [ngClass]="{ bold: (chosenItem$ | async) == item.id }"
+      >
+        {{ item.name }}
+      </li>
       }
     </ul>
+    chosen ID: {{ chosenItem$ | async }} chosen ID (signal): {{ chosenItem() }}
     <label>
       <input type="checkbox" [(ngModel)]="showChild" />
       show child component
@@ -65,6 +76,14 @@ export class AppComponent {
   itemsSvc = inject(ItemsService);
 
   showChild = false;
+
+  chosenItem$ = new Subject<number>();
+
+  chooseItem(id: number) {
+    this.chosenItem$.next(id);
+  }
+
+  chosenItem = toSignal(this.chosenItem$, { requireSync: true });
 
   handleClick() {
     console.log(this.itemsSvc.items());
