@@ -62,6 +62,7 @@ export class AppComponent {
 
   consoleLogEffect = effect(() => {
     console.log(
+      'consoleLogEffect',
       this.itemsSvc.items(),
       untracked(() => this.nameFilter())
     );

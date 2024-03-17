@@ -17,7 +17,7 @@ export class ChildComponent {
     effect(
       () => {
         const timerId = setInterval(() => {
-          console.log(this.itemsSvc.items().length);
+          console.log('ngOnInit/timerEffect', this.itemsSvc.items().length);
         }, 1000);
       },
       {
@@ -29,7 +29,7 @@ export class ChildComponent {
   timerEffect = effect(
     (onCleanup) => {
       const timerId = setInterval(() => {
-        console.log(this.itemsSvc.items().length);
+        console.log('timerEffect', this.itemsSvc.items().length);
       }, 1000);
 
       onCleanup(() => {
