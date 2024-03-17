@@ -1,4 +1,12 @@
-import { Component, Signal, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  Signal,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ItemsService } from './items.service';
@@ -41,6 +49,13 @@ export class AppComponent {
   }
 
   lastItem = computed(() => this.itemsSvc.items().slice(-1)[0]);
+
+  consoleLogEffect = effect(() => {
+    console.log(
+      this.itemsSvc.items(),
+      untracked(() => this.nameFilter())
+    );
+  });
 
   newItemName = signal('');
   updateNewItemName($event: Event) {
