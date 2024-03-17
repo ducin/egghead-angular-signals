@@ -10,11 +10,13 @@ import {
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ItemsService } from './items.service';
+import { ChildComponent } from './child.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, FormsModule, ChildComponent],
   template: `
     <h1>Angular signals</h1>
     last: {{ lastItem()?.name }}
@@ -38,11 +40,19 @@ import { ItemsService } from './items.service';
       <li>{{ item.name }}</li>
       }
     </ul>
-    <!-- {{ b() }} cycle here -->
+    <label>
+      <input type="checkbox" [(ngModel)]="showChild" />
+      show child component
+    </label>
+    @if (showChild){
+    <app-child />
+    }
   `,
 })
 export class AppComponent {
   itemsSvc = inject(ItemsService);
+
+  showChild = false;
 
   handleClick() {
     console.log(this.itemsSvc.items());
@@ -84,8 +94,4 @@ export class AppComponent {
       return a.name.localeCompare(b.name) * order;
     });
   });
-
-  a = signal('John');
-  b: Signal<string> = computed(() => this.a() + this.c());
-  c: Signal<string> = computed(() => this.a() + this.b());
 }
