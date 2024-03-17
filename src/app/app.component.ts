@@ -83,7 +83,7 @@ export class AppComponent {
     this.chosenItem$.next(id);
   }
 
-  chosenItem = toSignal(this.chosenItem$, { requireSync: true });
+  chosenItem = toSignal(this.chosenItem$);
 
   handleClick() {
     console.log(this.itemsSvc.items());
