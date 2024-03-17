@@ -21,7 +21,11 @@ export class ItemsService {
     // { equal: _.isEqual }
   );
 
-  synchronizeItemsEffect = syncEffect('items', () => this.#items());
+  synchronizeItemsEffect = effect(() => {
+    localStorage.setItem('items', JSON.stringify(this.#items()));
+  });
+
+  // synchronizeItemsEffect = syncEffect('items', () => this.#items());
 
   items = this.#items.asReadonly();
 
