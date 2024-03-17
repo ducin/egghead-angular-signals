@@ -1,4 +1,12 @@
-import { Component, Signal, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  Signal,
+  computed,
+  effect,
+  inject,
+  signal,
+  untracked,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ItemsService } from './items.service';
@@ -30,7 +38,6 @@ import { ItemsService } from './items.service';
       <li>{{ item.name }}</li>
       }
     </ul>
-    <!-- {{ b() }} cycle here -->
   `,
 })
 export class AppComponent {
@@ -41,6 +48,13 @@ export class AppComponent {
   }
 
   lastItem = computed(() => this.itemsSvc.items().slice(-1)[0]);
+
+  consoleLogEffect = effect(() => {
+    console.log(
+      this.itemsSvc.items(),
+      untracked(() => this.nameFilter())
+    );
+  });
 
   newItemName = signal('');
   updateNewItemName($event: Event) {
@@ -69,8 +83,4 @@ export class AppComponent {
       return a.name.localeCompare(b.name) * order;
     });
   });
-
-  a = signal('John');
-  b: Signal<string> = computed(() => this.a() + this.c());
-  c: Signal<string> = computed(() => this.a() + this.b());
 }
