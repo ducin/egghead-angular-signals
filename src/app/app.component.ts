@@ -1,4 +1,4 @@
-import { Component, Signal, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ItemsService } from './items.service';
@@ -7,8 +7,7 @@ import { ItemsService } from './items.service';
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet],
-  template: `
-    <h1>Angular signals</h1>
+  template: ` <h1>Angular signals</h1>
     last: {{ lastItem()?.name }}
 
     <button (click)="handleClick()">log items</button>
@@ -29,9 +28,7 @@ import { ItemsService } from './items.service';
       @for(item of visibleItems(); track 'id'){
       <li>{{ item.name }}</li>
       }
-    </ul>
-    <!-- {{ b() }} cycle here -->
-  `,
+    </ul>`,
 })
 export class AppComponent {
   itemsSvc = inject(ItemsService);
@@ -69,8 +66,4 @@ export class AppComponent {
       return a.name.localeCompare(b.name) * order;
     });
   });
-
-  a = signal('John');
-  b: Signal<string> = computed(() => this.a() + this.c());
-  c: Signal<string> = computed(() => this.a() + this.b());
 }
