@@ -349,6 +349,8 @@ resetItems() {
 }
 ```
 
+# 13. Synchronize Angular Signal or Computed value with localStorage using Effect
+
 # 13. Create a Reusable Effect Synchronizing Angular Signal or Computed value to localStorage
 
 ```ts
