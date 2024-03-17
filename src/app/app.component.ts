@@ -1,6 +1,5 @@
 import {
   Component,
-  Signal,
   computed,
   effect,
   inject,
@@ -38,7 +37,6 @@ import { ItemsService } from './items.service';
       <li>{{ item.name }}</li>
       }
     </ul>
-    <!-- {{ b() }} cycle here -->
   `,
 })
 export class AppComponent {
@@ -84,8 +82,4 @@ export class AppComponent {
       return a.name.localeCompare(b.name) * order;
     });
   });
-
-  a = signal('John');
-  b: Signal<string> = computed(() => this.a() + this.c());
-  c: Signal<string> = computed(() => this.a() + this.b());
 }
