@@ -351,6 +351,16 @@ resetItems() {
 
 # 13. Synchronize Angular Signal or Computed value with localStorage using Effect
 
+```ts
+synchronizeItemsEffect = effect(() => {
+  return localStorage.setItem("items", JSON.stringify(this.#items()));
+});
+```
+
+```ts
+localStorage.getItem("items");
+```
+
 # 14. Create a Reusable Effect Synchronizing Angular Signal or Computed value to localStorage
 
 ```ts
