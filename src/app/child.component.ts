@@ -5,44 +5,28 @@ import { ItemsService } from './items.service';
   selector: 'app-child',
   standalone: true,
   imports: [],
-  template: ` <h3>child component</h3>
-    <button (click)="cleanUp()">clean up the effect</button>`,
+  template: ` <h3>child component</h3>`,
 })
 export class ChildComponent {
   itemsSvc = inject(ItemsService);
 
   #injector = inject(Injector);
 
-  ngOnInit() {
+  ngOnInit(): void {
     effect(
-      () => {
+      (onCleanup) => {
         const timerId = setInterval(() => {
           console.log(this.itemsSvc.items().length);
         }, 1000);
+
+        onCleanup(() => {
+          console.log('effect cleaned up');
+          clearInterval(timerId);
+        });
       },
       {
         injector: this.#injector,
       }
     );
-  }
-
-  timerEffect = effect(
-    (onCleanup) => {
-      const timerId = setInterval(() => {
-        console.log(this.itemsSvc.items().length);
-      }, 1000);
-
-      onCleanup(() => {
-        console.log('effect cleaned up');
-        clearInterval(timerId);
-      });
-    },
-    {
-      manualCleanup: true,
-    }
-  );
-
-  cleanUp() {
-    this.timerEffect.destroy();
   }
 }
