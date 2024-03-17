@@ -351,7 +351,7 @@ resetItems() {
 
 # 13. Synchronize Angular Signal or Computed value with localStorage using Effect
 
-# 13. Create a Reusable Effect Synchronizing Angular Signal or Computed value to localStorage
+# 14. Create a Reusable Effect Synchronizing Angular Signal or Computed value to localStorage
 
 ```ts
 export function syncEffect<T>(key: string, valueGetter: () => T) {
@@ -365,7 +365,7 @@ export function syncEffect<T>(key: string, valueGetter: () => T) {
 synchronizeItemsEffect = syncEffect("items", () => this.#items());
 ```
 
-# 14. Destroy an Angular Signal Effect
+# 15. Destroy an Angular Signal Effect
 
 by default - do nothing
 show when a component gets detroyed...
@@ -382,23 +382,23 @@ logEffect = effect(
 );
 ```
 
-# 15. Bind an Angular Signal Effect to an Injector for automatic cleanup
+# 16. Bind an Angular Signal Effect to an Injector for automatic cleanup
 
-# 16. Set up an Angular Signal Effect cleanup handler
+# 17. Set up an Angular Signal Effect cleanup handler
 
-# 17. Turn an RxJS observable into an Angular Signal with toSignal
+# 18. Turn an RxJS observable into an Angular Signal with toSignal
 
-# 18. Provide an initial value within toSignal
+# 19. Provide an initial value within toSignal
 
 with requiredSync
 
-# 19. Handle observable errors within toSignal
+# 20. Handle observable errors within toSignal
 
 emit `error`, rejectErrors
 
-# 20. Fetch data via HTTP using RxJS observables and toSignal
+# 21. Fetch data via HTTP using RxJS observables and toSignal
 
-# 21. Turn an Angular Signal into an RxJS observable
+# 22. Turn an Angular Signal into an RxJS observable
 
 ```ts
 import { toObservable } from "@angular/core/rxjs-interop";
@@ -412,4 +412,4 @@ constructor(){
 }
 ```
 
-# 22. Use Angular Signals within an Angular OnPush-based Component
+# 23. Use Angular Signals within an Angular OnPush-based Component
