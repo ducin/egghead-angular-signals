@@ -84,6 +84,7 @@ export class AppComponent {
   itemsSvc = inject(ItemsService);
 
   usersHTTPSvc = inject(UsersHTTPService);
+
   users$ = this.usersHTTPSvc.getUsers();
 
   users = toSignal(this.usersHTTPSvc.getUsers());
