@@ -1,27 +1,28 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, effect } from '@angular/core';
 import _ from 'lodash';
+
+type Item = {
+  id: number;
+  name: string;
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class ItemsService {
   #items = signal(
-    [
-      { id: 1, name: 'Andy' },
-      { id: 2, name: 'Bob' },
-      { id: 3, name: 'Charlie' },
-    ]
+    JSON.parse(localStorage.getItem('items')!) as Item[]
     // { equal: _.isEqual }
   );
+
+  synchronizeItemsEffect = effect(() => {
+    localStorage.setItem('items', JSON.stringify(this.#items()));
+  });
 
   items = this.#items.asReadonly();
 
   clearItems() {
-    this.#items.set([
-      { id: 1, name: 'Andy' },
-      { id: 2, name: 'Bob' },
-      { id: 3, name: 'Charlie' },
-    ]);
+    this.#items.set([]);
   }
 
   append(name: string) {
