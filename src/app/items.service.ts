@@ -1,6 +1,12 @@
 import { Injectable, signal, effect } from '@angular/core';
 import _ from 'lodash';
 
+export function syncEffect<T>(key: string, valueGetter: () => T) {
+  return effect(() => {
+    localStorage.setItem('items', JSON.stringify(valueGetter()));
+  });
+}
+
 type Item = {
   id: number;
   name: string;
@@ -15,9 +21,7 @@ export class ItemsService {
     // { equal: _.isEqual }
   );
 
-  synchronizeItemsEffect = effect(() => {
-    localStorage.setItem('items', JSON.stringify(this.#items()));
-  });
+  synchronizeItemsEffect = syncEffect('items', () => this.#items());
 
   items = this.#items.asReadonly();
 
