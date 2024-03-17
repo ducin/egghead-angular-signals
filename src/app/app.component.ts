@@ -14,6 +14,7 @@ import { ItemsService } from './items.service';
 import { ChildComponent } from './child.component';
 import { FormsModule } from '@angular/forms';
 import { Subject, BehaviorSubject } from 'rxjs';
+import { UsersHTTPService } from './users-http.service';
 
 @Component({
   selector: 'app-root',
@@ -63,6 +64,7 @@ import { Subject, BehaviorSubject } from 'rxjs';
       }
     </ul>
     chosen ID: {{ chosenItem$ | async }} chosen ID (signal): {{ chosenItem() }}
+
     <label>
       <input type="checkbox" [(ngModel)]="showChild" />
       show child component
@@ -70,10 +72,21 @@ import { Subject, BehaviorSubject } from 'rxjs';
     @if (showChild){
     <app-child />
     }
+
+    <ul>
+      @for(user of users(); track user.id){
+      <li>ID: {{ user.id }}, name: {{ user.name }}</li>
+      }
+    </ul>
   `,
 })
 export class AppComponent {
   itemsSvc = inject(ItemsService);
+
+  usersHTTPSvc = inject(UsersHTTPService);
+  users$ = this.usersHTTPSvc.getUsers();
+
+  users = toSignal(this.usersHTTPSvc.getUsers());
 
   showChild = false;
 
