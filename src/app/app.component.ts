@@ -1,12 +1,12 @@
 import {
   Component,
-  Signal,
   computed,
   effect,
   inject,
   signal,
   untracked,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ItemsService } from './items.service';
@@ -17,6 +17,11 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet, FormsModule, ChildComponent],
+  styles: `
+    label {
+      display: block;
+    }
+  `,
   template: `
     <h1>Angular signals</h1>
     last: {{ lastItem()?.name }}
@@ -25,16 +30,22 @@ import { FormsModule } from '@angular/forms';
     <button (click)="itemsSvc.clearItems()">clear items</button>
     <button (click)="itemsSvc.append(newItemName())">new item</button>
 
-    <input
-      type="text"
-      [value]="newItemName()"
-      (input)="updateNewItemName($event)"
-    />
-    <input
-      type="text"
-      [value]="nameFilter()"
-      (input)="updateNameFilter($event)"
-    />
+    <label>
+      new item:
+      <input
+        type="text"
+        [value]="newItemName()"
+        (input)="updateNewItemName($event)"
+      />
+    </label>
+    <label>
+      name filter:
+      <input
+        type="text"
+        [value]="nameFilter()"
+        (input)="updateNameFilter($event)"
+      />
+    </label>
     <ul>
       @for(item of visibleItems(); track 'id'){
       <li>{{ item.name }}</li>
@@ -74,6 +85,12 @@ export class AppComponent {
   }
 
   nameFilter = signal('');
+
+  nameFilter$ = toObservable(this.nameFilter);
+
+  constructor() {
+    this.nameFilter$.subscribe(console.log);
+  }
 
   updateNameFilter($event: Event) {
     this.nameFilter.set(($event.target as HTMLInputElement)['value']);
