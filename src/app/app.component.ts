@@ -31,7 +31,7 @@ import { UsersHTTPService } from './users-http.service';
   `,
   template: `
     <h1>Angular signals</h1>
-    last: {{ lastItem()?.name }}
+    last: {{ lastItem().name }}
 
     <button (click)="handleClick()">log items</button>
     <button (click)="itemsSvc.clearItems()">clear items</button>
